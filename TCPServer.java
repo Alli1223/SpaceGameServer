@@ -11,8 +11,6 @@ import java.net.ServerSocket;
  * A chat server that delivers public and private messages.
  */
 public class TCPServer {
-	
-	private static Timer timer = Timer.getInstance();
 	StringBuilder AllActions = new StringBuilder();
 	private static TCPServer tCPServer = new TCPServer();
 
@@ -30,6 +28,7 @@ public class TCPServer {
 		return threads;
 	}
 	
+	//Get the instance of this server
 	public static TCPServer getInstance(){
 		return tCPServer;
 	}
@@ -44,7 +43,9 @@ public class TCPServer {
 		if (args.length < 1) {
 			System.out.println(
 					"Server running on port number: " + portNumber);
-		} else {
+		}
+		//Run on other specified port
+		else {
 			portNumber = Integer.valueOf(args[0]).intValue();
 		}
 
@@ -81,7 +82,6 @@ public class TCPServer {
 					os.println("Server too busy. Try later.");
 					os.close();
 					clientSocket.close();
-					timer.getTickThread().interrupt();
 				}
 			} catch (IOException e) {
 				System.out.println(e);
@@ -90,31 +90,20 @@ public class TCPServer {
 	}
 }
 
-/*
- * The chat client thread. This client thread opens the input and the output
- * streams for a particular client, ask the client's name, informs all the
- * clients connected to the server about the fact that a new client has joined
- * the chat room, and as long as it receive data, echos that data back to all
- * other clients. The thread broadcast the incoming messages to all clients and
- * routes the private message to the particular client. When a client leaves the
- * chat room this thread informs also all the clients about that and terminates.
- */
+// Client thread //////////////////////////////
 class clientThread extends Thread {
 
 	private String clientName = null;
 	private DataInputStream inStream = null;
 	private PrintStream outStream = null;
 	private Socket clientSocket = null;
-	private String ClientAction = null;
 	private final clientThread[] threads;
 	//Our Code////////////////////////////////////////////////////////////
 
 	private int maxClientsCount;
-	private Character character = new Character(3, 3);
+	private Character character = new Character(500, 500);
 	private Map map = Map.getInstance();
 	private final int ID;
-
-	private Parser parser = Parser.getInstance();
 	
 
 	public clientThread(Socket clientSocket, clientThread[] threads, int ID) {
@@ -138,6 +127,7 @@ class clientThread extends Thread {
 		
 		
 
+		// Create streams and ask their name
 		try {
 			/*
 			 * Create input and output streams for this client.
@@ -150,7 +140,8 @@ class clientThread extends Thread {
 
 
 			/* Welcome the new the client. */
-			outStream.println("Welcome " + name + " Client ID: " + GetClientThread());
+			outStream.println("{<" + name + "> X:" +  character.getX() + " Y:" +  character.getY()+"}");
+			outStream.flush();
 			//Database.insertIntoHighscoreDatabase(this.getID(), clientName, 10);
 			//Database.printHighscoreDatabase();
 			// Send player update info to all the other clients
@@ -174,14 +165,15 @@ class clientThread extends Thread {
 				}
 			}
 
-
+			
 
 			/* Process their command */
 			while (true) 
 			{
 				String line = inStream.readLine().trim();
 				String Action = null;
-				boolean AlreadyInList = false;
+
+				System.out.println("Client: " + name + "Entered: " + line);
 
 
 				// Move the character
@@ -219,7 +211,7 @@ class clientThread extends Thread {
 					if (threads[i] != null && threads[i].clientName != null) 
 					{
 
-						//Send individual command aswell
+						//Send individual command as well
 						threads[i].outStream.println("{<" + clientName + "> X:" +  character.getX() + " Y:" +  character.getY() + " ACT:" + Action + "." + "}");
 						threads[i].outStream.flush();
 					}

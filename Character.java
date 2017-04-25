@@ -71,7 +71,7 @@ public class Character {
 		
 		if (inputMovement.equals("MOVE_EAST"))
 		{
-			if(nextX + 1 <= 100)
+			if(nextX + 1 <= map.getCells().length)
 				nextX = nextX + 1;
 		}
 		else if (inputMovement.equals("MOVE_WEST"))
@@ -86,7 +86,7 @@ public class Character {
 		}
 		else if (inputMovement.equals("MOVE_SOUTH"))
 		{
-			if(nextY + 1 <= 100)
+			if(nextY + 1 <= map.getCells().length)
 			nextY = nextY + 1;
 		}
 

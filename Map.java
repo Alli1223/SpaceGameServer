@@ -18,7 +18,7 @@ public class Map {
 		}
 	}
 
-	private Cell[][] cells = new Cell[100][100];
+	private Cell[][] cells = new Cell[1000][1000];
 
 	protected void setCell(int x, int y, String content) {
 		getCells()[x][y].setCellContent(content);
