@@ -5,6 +5,7 @@ public class Cell {
 	}
 	// Whether there is anything in the cell
 	private String cellContent;
+	
 	// Bool for whether a character is in the cell
 	public boolean cellTaken = false;
 	// Setter

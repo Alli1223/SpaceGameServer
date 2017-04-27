@@ -48,6 +48,8 @@ public class TCPServer {
 		else {
 			portNumber = Integer.valueOf(args[0]).intValue();
 		}
+		
+		
 
 		/*
 		 * Open a server socket on the portNumber (default 2222). Note that we
@@ -101,7 +103,7 @@ class clientThread extends Thread {
 	//Our Code////////////////////////////////////////////////////////////
 
 	private int maxClientsCount;
-	private Character character = new Character(500, 500);
+	private Character character = new Character(100, 100);
 	private Map map = Map.getInstance();
 	private final int ID;
 	
@@ -167,19 +169,19 @@ class clientThread extends Thread {
 
 			
 
-			/* Process their command */
+			/* Each Thread will Process their command */
 			while (true) 
 			{
 				String line = inStream.readLine().trim();
 				String Action = null;
 
-				System.out.println("Client: " + name + "Entered: " + line);
-
+				
 
 				// Move the character
 				character.moveCharacter(line);
+				
 
-
+				//System.out.println("Client: " + character.getX() + " " + character.getY());
 				// Sends number of players ins session
 				if(line.equals("NUMBER_OF_PLAYERS_REQUEST"))
 				{
@@ -201,10 +203,14 @@ class clientThread extends Thread {
 				if(line.equals("PLACE_BED") || line.equals("PLACE_BOX"))
 				{
 					Action = line;
-					map.setCell(character.getX(), character.getY(), line);
+					map.setCell(character.getX() / map.getCellSize(), character.getY() / map.getCellSize(), line);
 				}
 
 
+				else if(line.equals("PLAYER_LOCATIONS_REQUEST"))
+				{
+					
+				
 				// concurrently send strings of player positions to all the clients
 				for (int i = 0; i < maxClientsCount; i++) 
 				{
@@ -212,9 +218,10 @@ class clientThread extends Thread {
 					{
 
 						//Send individual command as well
-						threads[i].outStream.println("{<" + clientName + "> X:" +  character.getX() + " Y:" +  character.getY() + " ACT:" + Action + "." + "}");
+						threads[i].outStream.println("{<" + clientName + "> X:" +  character.getX() + ". Y:" +  character.getY() + ". ACT:" + Action + "." + "}");
 						threads[i].outStream.flush();
 					}
+				}
 				}
 
 				// Disconnect the client if they send the quit message
