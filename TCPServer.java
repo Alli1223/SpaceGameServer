@@ -102,6 +102,7 @@ class clientThread extends Thread {
 	private final clientThread[] threads;
 	//Our Code////////////////////////////////////////////////////////////
 
+	private InputReader ir = new InputReader();
 	private int maxClientsCount;
 	private Character character = new Character(100, 100);
 	private Map map = Map.getInstance();
@@ -141,6 +142,7 @@ class clientThread extends Thread {
 			//TODO: send the client their id for communication
 
 
+			
 			/* Welcome the new the client. */
 			outStream.println("{<" + name + "> X:" +  character.getX() + " Y:" +  character.getY()+"}");
 			outStream.flush();
@@ -175,10 +177,12 @@ class clientThread extends Thread {
 				String line = inStream.readLine().trim();
 				String Action = null;
 
-				
+				ir.ProcessInput(line, character);
+				System.out.println(line);
 
+				
 				// Move the character
-				character.moveCharacter(line);
+				//character.moveCharacter(line);
 				
 
 				//System.out.println("Client: " + character.getX() + " " + character.getY());
@@ -207,22 +211,22 @@ class clientThread extends Thread {
 				}
 
 
-				else if(line.equals("PLAYER_LOCATIONS_REQUEST"))
-				{
-					
 				
+
 				// concurrently send strings of player positions to all the clients
 				for (int i = 0; i < maxClientsCount; i++) 
 				{
 					if (threads[i] != null && threads[i].clientName != null) 
 					{
-
+						
+						threads[i].outStream.println(line);
+						
 						//Send individual command as well
-						threads[i].outStream.println("{<" + clientName + "> X:" +  character.getX() + ". Y:" +  character.getY() + ". ACT:" + Action + "." + "}");
+						//threads[i].outStream.println("{<" + clientName + "> X:" +  character.getX() + ". Y:" +  character.getY() + ". ACT:" + Action + "." + "}");
 						threads[i].outStream.flush();
 					}
 				}
-				}
+				
 
 				// Disconnect the client if they send the quit message
 				if(line.equals("QUIT"))

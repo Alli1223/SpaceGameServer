@@ -8,6 +8,7 @@ public class Character {
 	private int x = 0;
 	// Character Y location
 	private int y = 0;
+	private String name;
 	
 	// Potential next X
 	public int nextX = 0;
@@ -51,6 +52,14 @@ public class Character {
 	public void setPosition(int newX, int newY) {
 		x = newX;
 		y = newY;
+	}
+	public void setName(String newName)
+	{
+		name = newName;
+	}
+	public String getName()
+	{
+		return name;
 	}
 
 	/*
