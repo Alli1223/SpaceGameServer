@@ -13,11 +13,15 @@ import java.net.ServerSocket;
 public class TCPServer {
 	StringBuilder AllActions = new StringBuilder();
 	private static TCPServer tCPServer = new TCPServer();
+	
+	public String outputCommands = null;
 
 	// The server socket.
 	private static ServerSocket serverSocket = null;
 	// The client socket.
 	private static Socket clientSocket = null;
+	
+	public int numOfConnectedClients = 0;
 
 	// This chat server can accept up to maxClientsCount clients' connections.
 	private static final int maxClientsCount = 40;
@@ -127,8 +131,6 @@ class clientThread extends Thread {
 
 		clientThread[] threads = this.threads;
 		
-		
-		
 
 		// Create streams and ask their name
 		try {
@@ -145,6 +147,8 @@ class clientThread extends Thread {
 			
 			/* Welcome the new the client. */
 			outStream.println("{<" + name + "> X:" +  character.getX() + " Y:" +  character.getY()+"}");
+			TCPServer.getInstance().numOfConnectedClients++;
+			
 			outStream.flush();
 			//Database.insertIntoHighscoreDatabase(this.getID(), clientName, 10);
 			//Database.printHighscoreDatabase();
@@ -175,10 +179,10 @@ class clientThread extends Thread {
 			while (true) 
 			{
 				String line = inStream.readLine().trim();
-				String Action = null;
 
+				//Process users inputs
 				ir.ProcessInput(line, character);
-				System.out.println(line);
+				//System.out.println(line);
 
 				
 				// Move the character
@@ -206,7 +210,6 @@ class clientThread extends Thread {
 				//Process actions
 				if(line.equals("PLACE_BED") || line.equals("PLACE_BOX"))
 				{
-					Action = line;
 					map.setCell(character.getX() / map.getCellSize(), character.getY() / map.getCellSize(), line);
 				}
 
@@ -218,12 +221,17 @@ class clientThread extends Thread {
 				{
 					if (threads[i] != null && threads[i].clientName != null) 
 					{
-						
-						threads[i].outStream.println(line);
-						
+
+						//threads[i].outStream.println(line);
+
 						//Send individual command as well
-						//threads[i].outStream.println("{<" + clientName + "> X:" +  character.getX() + ". Y:" +  character.getY() + ". ACT:" + Action + "." + "}");
-						threads[i].outStream.flush();
+
+
+							outStream.println("{<" + threads[i].clientName + "> X:" +  threads[i].character.getX() + ". Y:" +  threads[i].character.getY() + ".}\n");
+						//threads[i].outStream.flush();
+
+
+
 					}
 				}
 				

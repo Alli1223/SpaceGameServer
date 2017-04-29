@@ -5,19 +5,46 @@ public class InputReader
 	{
 
 		input.toUpperCase();
-		int nameEndPoint = 0;
-		int nameStartPoint = 0;
+
+		int x = 0;
+		int y = 0;
 		int xValStart = 0;
+		int xValEnd = 0;
 		int yValStart = 0;
-		String playerName = null;
-		System.out.println("Processing Input..");
+		int yValEnd = 0;
+		String playerXPos = null;
+		String playerYPos = null;
+		//System.out.println("Processing Input..");
 		if(input.startsWith("{"))
 		{
+			
+			xValStart = input.indexOf("X") + 2;
+			xValEnd = input.indexOf(".") - 1;
+			yValStart = input.indexOf("Y") + 2;
+			yValEnd = input.lastIndexOf(".") - 1;
+			
+			
+			playerXPos = String.copyValueOf(input.toCharArray(), xValStart, xValEnd - xValStart + 1);
+			playerYPos = String.copyValueOf(input.toCharArray(), yValStart, yValEnd - yValStart + 1);
+			
+			
+			//input.charAt(xValStart + 2);
+			
+			//Integer.parseInt(playerXPos);
+			character.setPosition(Integer.parseInt(playerXPos), Integer.parseInt(playerYPos));
+			
+			TCPServer.getInstance().outputCommands = input;
+			
+			/* NO NEED TO PROCESS NAME AS CLIENT ONLY SENDS THEIR X AND Y
 			nameStartPoint = input.indexOf("<");
 			nameEndPoint = input.indexOf(">");
 
+			
+			for(int c = 0; c < TCPServer.getInstance().numOfConnectedClients; c++)
+				if(playerName != TCPServer.getInstance().)
 			playerName = String.copyValueOf(input.toCharArray(), nameStartPoint, nameEndPoint);
-			//character.setName(playerName);
+			character.setName(playerName);
+			*/ 
 			
 			
 			
