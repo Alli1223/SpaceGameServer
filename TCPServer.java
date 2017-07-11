@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
 import java.net.ServerSocket;
+import org.json.JSONException;
 
 //Source From http://makemobiapps.blogspot.co.uk/p/multiple-client-server-chat-programming.html
 
@@ -40,7 +41,7 @@ public class TCPServer {
 	private TCPServer(){}
 	
 	//Our code ends////////////////////////////////////////////////////////
-	public static void main(String args[]) {
+	public static void main(String args[]) throws JSONException {
 
 		// The default port number.
 		int portNumber = 2222;
@@ -124,9 +125,9 @@ class clientThread extends Thread {
 		return ID;
 	}
 	
-	
+
 	@SuppressWarnings("deprecation")
-	public void run() {
+	public void run()  {
 		int maxClientsCount = this.maxClientsCount;
 
 		clientThread[] threads = this.threads;
@@ -181,7 +182,15 @@ class clientThread extends Thread {
 				String line = inStream.readLine().trim();
 
 				//Process users inputs
-				ir.ProcessInput(line, character);
+                try{
+                    ir.ProcessInput(line, character, map);
+                }
+                catch(JSONException e)
+                {
+                    System.out.println("json error :(");
+                }
+
+
 				//System.out.println(line);
 
 				
