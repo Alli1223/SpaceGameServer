@@ -1,9 +1,18 @@
 //Attempted singleton class
 
+import javafx.scene.control.*;
+
+import java.util.NavigableMap;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class Map {
 
 	private static Map map = new Map();
 	private int cellSize = 50;
+
+    ConcurrentHashMap<Integer,ConcurrentHashMap<Integer, Chunk>> World = new ConcurrentHashMap<Integer,ConcurrentHashMap<Integer, Chunk>>(1000);
+
+
 
 	public static Map getInstance() {
 		return map;
@@ -14,6 +23,8 @@ public class Map {
 	}
 
 	private Map() {
+
+
 
 		// populates the map
 		System.out.println("Starting Map Gen");
@@ -38,8 +49,8 @@ public class Map {
 
 	// uncomment if we go back into a tree based system:
 
-	// private Region[][] map = new Region[4][4];
+	// private Chunk[][] map = new Chunk[4][4];
 
-	// public Region[][] getRegions() { return map; }
+	//public Chunk[][] getRegions() { return map; }
 
 }

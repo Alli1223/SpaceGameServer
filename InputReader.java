@@ -50,5 +50,10 @@ public class InputReader
 			
 		}
 	}
+
+	public synchronized void ProcessCellData(String inString, Map map)
+	{
+
+	}
 	
 }
