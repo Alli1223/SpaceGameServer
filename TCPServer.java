@@ -174,20 +174,22 @@ class clientThread extends Thread {
 				}
 			}
 
-			
+
 
 			/* Each Thread will Process their command */
 			while (true) 
 			{
 				String line = inStream.readLine().trim();
 
-				//Process users inputs
+
+				//ir.ProcessInput(line, character, map);
+				// Proccess the json
                 try{
-                    ir.ProcessInput(line, character, map);
+                    ir.ProcessJson(line, character, map);
                 }
                 catch(JSONException e)
                 {
-                    System.out.println("json error :(");
+                    System.out.println("JSON ERRROR: " + e);
                 }
 
 

@@ -11,9 +11,29 @@ import sun.plugin.javascript.ocx.JSObject;
 
 public class InputReader
 {
-	public synchronized void ProcessInput(String inString, Character character, Map map) throws JSONException{
+    public synchronized void ProcessJson(String inString, Character character, Map map) throws JSONException
+    {
 
-        inString.toUpperCase();
+        if (inString.startsWith("[CellData]"))
+        {
+            // Erase the [CellData] before the json
+            inString = inString.substring(10);
+
+            JSONObject obj = new JSONObject(inString);
+            int x = obj.getInt("X");
+            int y = obj.getInt("Y");
+            boolean fence = obj.getBoolean("Fence");
+            System.out.println(x + " " + y + " ");
+
+            map.setCell(x,y,obj.toString());
+        }
+    }
+
+
+	public synchronized void ProcessInput(String inString, Character character, Map map) {
+
+        //inString.toUpperCase();
+
 
         int x = 0;
         int y = 0;
@@ -54,22 +74,7 @@ public class InputReader
 			character.setName(playerName);
 			*/
         }
-        else if (inString.startsWith("["))
-        {
-            String jsonData = JSONParser.quote(inString);
-            JSONObject jsonObj = (JSONObject) JSONSerializer.toJSON(jsonData);
-            JSONObject cellData = jsonObj.getJSONObject("CellData");
-
-            int cellX = jsonObj.getInt("X");
-            int cellY = jsonObj.getInt("Y");
-
-            System.out.println(cellX + " " + cellY);
-
-
-
-
-        }
     }
 
-	
+
 }
