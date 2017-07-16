@@ -1,17 +1,9 @@
-import org.json.*;
-import net.sf.json.JSONSerializer;
-import jdk.nashorn.internal.parser.JSONParser;
 import org.json.JSONObject;
 import org.json.JSONException;
 
-
-
-import org.json.JSONString;
-import sun.plugin.javascript.ocx.JSObject;
-
 public class InputReader
 {
-    public synchronized void ProcessJson(String inString, Character character, Map map) throws JSONException
+    public synchronized void ProcessJson(String inString, Character character, World map) throws JSONException
     {
 
         if (inString.startsWith("[CellData]"))
@@ -30,7 +22,7 @@ public class InputReader
     }
 
 
-	public synchronized void ProcessInput(String inString, Character character, Map map) {
+	public synchronized void ProcessInput(String inString, Character character, World map) {
 
         //inString.toUpperCase();
 

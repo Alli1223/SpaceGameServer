@@ -22,7 +22,7 @@ public class Character {
 	        "NORTH", "SOUTH", "EAST", "WEST"
 	    };
 	
-	//private Map map = Map.getInstance();
+	//private World map = World.getInstance();
 
 	// Sets character x and y on initialisation
 	public Character(int initialX, int initialY) {

@@ -2,7 +2,6 @@ import java.io.DataInputStream;
 import java.io.PrintStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.List;
 import java.net.ServerSocket;
 import org.json.JSONException;
 
@@ -110,7 +109,7 @@ class clientThread extends Thread {
 	private InputReader ir = new InputReader();
 	private int maxClientsCount;
 	private Character character = new Character(100, 100);
-	private Map map = Map.getInstance();
+	private World map = World.getInstance();
 	private final int ID;
 	
 
@@ -182,6 +181,7 @@ class clientThread extends Thread {
 				String line = inStream.readLine().trim();
 
 
+
 				//ir.ProcessInput(line, character, map);
 				// Proccess the json
                 try{
@@ -221,7 +221,7 @@ class clientThread extends Thread {
 				//Process actions
 				if(line.equals("PLACE_BED") || line.equals("PLACE_BOX"))
 				{
-					map.setCell(character.getX() / map.getCellSize(), character.getY() / map.getCellSize(), line);
+					//map.setCell(character.getX() / map.getCellSize(), character.getY() / map.getCellSize(), line);
 				}
 
 

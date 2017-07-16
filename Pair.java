@@ -1,48 +1,29 @@
 /**
  * Created by Alastair on 11/07/2017.
  */
-public class Pair <T, U>
-{
-    private final T first;
-    private final U second;
-    private transient final int hash;
+public class Pair {
 
-    public Pair( T f, U s )
-    {
-        this.first = f;
-        this.second = s;
-        hash = (first == null? 0 : first.hashCode() * 31)
-                +(second == null? 0 : second.hashCode());
-    }
+    private final int x;
+    private final int y;
 
-    public T getFirst()
-    {
-        return first;
-    }
-    public U getSecond()
-    {
-        return second;
+    public Pair(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
     @Override
-    public int hashCode()
-    {
-        return hash;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Pair)) return false;
+        Pair key = (Pair) o;
+        return x == key.x && y == key.y;
     }
 
-    public boolean equals( Object oth )
-    {
-        if ( this == oth )
-        {
-            return true;
-        }
-        if ( oth == null || !(getClass().isInstance( oth )) )
-        {
-            return false;
-        }
-        Pair<T, U> other = getClass().cast( oth );
-        return (first == null? other.first == null : first.equals( other.first ))
-                && (second == null? other.second == null : second.equals( other.second ));
+    @Override
+    public int hashCode() {
+        int result = x;
+        result = 31 * result + y;
+        return result;
     }
 
 }
