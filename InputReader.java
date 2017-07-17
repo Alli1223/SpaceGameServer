@@ -3,7 +3,7 @@ import org.json.JSONException;
 
 public class InputReader
 {
-    public synchronized void ProcessJson(String inString, Character character, World map) throws JSONException
+    public synchronized void ProcessJson(String inString, Character character, World world) throws JSONException
     {
 
         if (inString.startsWith("[CellData]"))
@@ -11,13 +11,15 @@ public class InputReader
             // Erase the [CellData] before the json
             inString = inString.substring(10);
 
+
             JSONObject obj = new JSONObject(inString);
             int x = obj.getInt("X");
             int y = obj.getInt("Y");
             boolean fence = obj.getBoolean("Fence");
             System.out.println(x + " " + y + " ");
+            Pair cellLocation = new Pair(x, y);
 
-            map.setCell(x,y,obj.toString());
+            world.setCell(cellLocation,obj.toString());
         }
     }
 

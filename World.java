@@ -1,54 +1,55 @@
-//Attempted singleton class
-import com.sun.javafx.collections.MappingChange;
-import javafx.util.*;
-
+// World class contains the map of cells and get and set functions for setting what the world looks like
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
-public class World {
-
+public class World
+{
 	public static World world = new World();
-	//private static World map = new World();
+    public static World getInstance()
+    {
+        return world;
+    }
 
-	private int worldSize = 1000;
-	//private tiles = new tiles.map(new Pair(1,1)).setCellContent("test");
+	private int startAreaSize = 1000;
 
-	//Map<Integer, Map<Integer, Cell>> map;
-	private static Map<Pair, Cell> tiles;
+	private Map<Pair, Cell> map;
 
+
+	// Constructor creates the start area for the map to save processing later in the game
 	private World() {
-		tiles = new HashMap<Pair, Cell>();
-		for(int x = -worldSize; x < worldSize; x++)
-			for (int y = worldSize; y < worldSize; y++)
-			{
-				Cell newCell = new Cell();
-				newCell.setCellContent("NULL");
-				Pair newPair = new Pair(x,y);
+		map = new ConcurrentHashMap<Pair, Cell>();
+		for(int x = -startAreaSize; x < startAreaSize; x++) {
+            for (int y = startAreaSize; y < startAreaSize; y++) {
+                Cell newCell = new Cell();
+                newCell.setCellContent("NULL");
+                Pair newPair = new Pair(x, y);
 
-				tiles.put(newPair, newCell);
-				//map.put(1, newCell.setCellContent("1"));
-			}
+                map.put(newPair, newCell);
+            }
+            //System.out.println("Creating start area " + x + " of " + startAreaSize);
+        }
 	}
 
-	public static World getInstance()
+	public Map<Pair, Cell> getMap()
 	{
-		return world;
-	}
-	public Map<Pair, Cell> getTiles()
-	{
-		return tiles;
+		return map;
 	}
 
 
-	protected  synchronized void setCell(int x, int y, String content) {
-        //tiles.put(new Pair(x, y), tiles.get())
+	protected  synchronized void setCell(Pair point, String content)
+    {
+        // If map contains a value and map value is not the same as the new content
+        if(map.containsKey(point))
+        {
+            if(map.get(point).getCellContent() != content)
+            {
+                // put the new cell content into the cell
+                map.put(point, map.get(point)).setCellContent(content);
+            }
+        }
+
 	}
 
-
-	// uncomment if we go back into a tree based system:
-
-	// private Chunk[][] map = new Chunk[4][4];
-
-	//public Chunk[][] getRegions() { return map; }
 
 }

@@ -282,6 +282,7 @@ class clientThread extends Thread {
 			}
 		} catch (IOException e) 
 		{
+			System.out.println("Error in main block: " + e);
 		}
 	}
 
