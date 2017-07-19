@@ -1,26 +1,31 @@
 // World class contains the map of cells and get and set functions for setting what the world looks like
+// Is a Singleton Class
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
 public class World
 {
-	public static World world = new World();
+    public static World world = new World();
     public static World getInstance()
     {
         return world;
     }
 
-	private int startAreaSize = 1000;
+    private InputReader ir;
 
-	private Map<Pair, Cell> map;
-
+	private ConcurrentHashMap<Pair, Cell> map;
+    public ConcurrentHashMap<Pair, Cell> getMap()
+    {
+        return map;
+    }
 
 	// Constructor creates the start area for the map to save processing later in the game
 	private World() {
+        int startAreaSize = 10;
 		map = new ConcurrentHashMap<Pair, Cell>();
 		for(int x = -startAreaSize; x < startAreaSize; x++) {
-            for (int y = startAreaSize; y < startAreaSize; y++) {
+            for (int y = -startAreaSize; y < startAreaSize; y++) {
                 Cell newCell = new Cell();
                 newCell.setCellContent("NULL");
                 Pair newPair = new Pair(x, y);
@@ -31,13 +36,8 @@ public class World
         }
 	}
 
-	public Map<Pair, Cell> getMap()
-	{
-		return map;
-	}
 
-
-	protected  synchronized void setCell(Pair point, String content)
+	public  synchronized void setCell(Pair point, String content)
     {
         // If map contains a value and map value is not the same as the new content
         if(map.containsKey(point))
@@ -49,6 +49,23 @@ public class World
             }
         }
 
+        //TODO: Create the cells when the players leave the starting area
+        /*
+        // Create the cell
+        else
+        {
+            Pair cellLocation = new Pair(0,0);
+            try
+            {
+                cellLocation = ir.GetCellPoint(content);
+            }
+            catch (Exception e)
+            {
+                System.out.println("Error in getting cellPoint: " + e);
+            }
+            map.put(cellLocation, new Cell());
+        }
+        */
 	}
 
 

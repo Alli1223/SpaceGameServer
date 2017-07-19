@@ -182,7 +182,7 @@ class clientThread extends Thread {
 
 
 
-				//ir.ProcessInput(line, character, map);
+				ir.ProcessPlayerMovement(line, character);
 				// Proccess the json
                 try{
                     ir.ProcessJson(line, character, map);
@@ -191,7 +191,6 @@ class clientThread extends Thread {
                 {
                     System.out.println("JSON ERRROR: " + e);
                 }
-
 
 				//System.out.println(line);
 
@@ -236,9 +235,7 @@ class clientThread extends Thread {
 						//threads[i].outStream.println(line);
 
 						//Send individual command as well
-
-
-							outStream.println("{<" + threads[i].clientName + "> X:" +  threads[i].character.getX() + ". Y:" +  threads[i].character.getY() + ".}\n");
+						outStream.println("{<" + threads[i].clientName + "> X:" +  threads[i].character.getX() + ". Y:" +  threads[i].character.getY() + ".}\n");
 						//threads[i].outStream.flush();
 
 
@@ -282,7 +279,7 @@ class clientThread extends Thread {
 			}
 		} catch (IOException e) 
 		{
-			System.out.println("Error in main block: " + e);
+			System.out.println("Error in client thread: " + e);
 		}
 	}
 
