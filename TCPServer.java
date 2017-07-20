@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.ServerSocket;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 //Source From http://makemobiapps.blogspot.co.uk/p/multiple-client-server-chat-programming.html
 
@@ -141,37 +142,33 @@ class clientThread extends Thread {
 			outStream = new PrintStream(clientSocket.getOutputStream());
 			String name = inStream.readLine();
 
-			//TODO: send the client their id for communication
-
-
+			//Only run if it is not a socket that wants only mapdata
+			if(name != "mapDataSocket")
+			{
 			
 			/* Welcome the new the client. */
-			outStream.println("{<" + name + "> X:" +  character.getX() + " Y:" +  character.getY()+"}");
-			TCPServer.getInstance().numOfConnectedClients++;
-			
-			outStream.flush();
-			//Database.insertIntoHighscoreDatabase(this.getID(), clientName, 10);
-			//Database.printHighscoreDatabase();
-			// Send player update info to all the other clients
-			synchronized (this) 
-			{
-				for (int i = 0; i < maxClientsCount; i++) 
-				{
-					if (threads[i] != null && threads[i] == this) 
-					{
-						System.out.println("Player " + name + " Joined." );
-						clientName = name;
-						break;
-					}
-				}
-				for (int i = 0; i < maxClientsCount; i++) 
-				{
-					if (threads[i] != null && threads[i] != this) 
-					{
-						threads[i].outStream.println("{<" + name + "> X:" +  character.getX() + " Y:" +  character.getY()+"}");
-					}
-				}
-			}
+                outStream.println("{<" + name + "> X:" + character.getX() + " Y:" + character.getY() + "}");
+                TCPServer.getInstance().numOfConnectedClients++;
+
+                outStream.flush();
+                //Database.insertIntoHighscoreDatabase(this.getID(), clientName, 10);
+                //Database.printHighscoreDatabase();
+                // Send player update info to all the other clients
+                synchronized (this) {
+                    for (int i = 0; i < maxClientsCount; i++) {
+                        if (threads[i] != null && threads[i] == this) {
+                            System.out.println("Player " + name + " Joined.");
+                            clientName = name;
+                            break;
+                        }
+                    }
+                    for (int i = 0; i < maxClientsCount; i++) {
+                        if (threads[i] != null && threads[i] != this) {
+                            threads[i].outStream.println("{<" + name + "> X:" + character.getX() + " Y:" + character.getY() + "}");
+                        }
+                    }
+                }
+            }
 
 
 
@@ -181,25 +178,31 @@ class clientThread extends Thread {
 				String line = inStream.readLine().trim();
 
 
+				//String used for getting values from json
+                String retrunString = "null";
 
 				ir.ProcessPlayerMovement(line, character);
+
 				// Proccess the json
                 try{
-                    ir.ProcessJson(line, character, map);
+                    ir.ProcessJson(line,retrunString, character, map);
                 }
                 catch(JSONException e)
                 {
                     System.out.println("JSON ERRROR: " + e);
                 }
 
-				//System.out.println(line);
+                // Send celldata if cellData is requested
+                if(retrunString != "null")
+                {
+                    System.out.println("Return String = " + retrunString);
+                    if(retrunString!= "null")
+                        outStream.println(retrunString);
+                }
 
-				
-				// Move the character
-				//character.moveCharacter(line);
-				
 
-				//System.out.println("Client: " + character.getX() + " " + character.getY());
+                outStream.flush();
+
 				// Sends number of players ins session
 				if(line.equals("NUMBER_OF_PLAYERS_REQUEST"))
 				{
@@ -224,23 +227,18 @@ class clientThread extends Thread {
 				}
 
 
-				
-
-				// concurrently send strings of player positions to all the clients
-				for (int i = 0; i < maxClientsCount; i++) 
-				{
-					if (threads[i] != null && threads[i].clientName != null) 
-					{
-
-						//threads[i].outStream.println(line);
-
-						//Send individual command as well
-						outStream.println("{<" + threads[i].clientName + "> X:" +  threads[i].character.getX() + ". Y:" +  threads[i].character.getY() + ".}\n");
-						//threads[i].outStream.flush();
 
 
-					}
-				}
+				// Send all players positions to all clients
+                if(clientName != "mapDataSocket") {
+                    // concurrently send strings of player positions to all the clients
+                    for (int i = 0; i < maxClientsCount; i++) {
+                        if (threads[i] != null && threads[i].clientName != null) {
+                            outStream.println("{<" + threads[i].clientName + "> X:" + threads[i].character.getX() + ". Y:" + threads[i].character.getY() + ".}\n");
+
+                        }
+                    }
+                }
 				
 
 				// Disconnect the client if they send the quit message

@@ -3,7 +3,7 @@ import org.json.JSONException;
 
 public class InputReader
 {
-    public synchronized void ProcessJson(String inString, Character character, World world) throws JSONException
+    public synchronized void ProcessJson(String inString, String returnString, Character character, World world) throws JSONException
 {
     if (inString.startsWith("[CellData]"))
     {
@@ -18,6 +18,20 @@ public class InputReader
         System.out.println(x + " " + y + " ");
         Pair cellLocation = new Pair(x, y);
         world.setCell(cellLocation,obj.toString());
+    }
+    if (inString.startsWith("[RequestMapUpdate]"))
+    {
+        inString = inString.substring(18);
+
+        returnString = world.getMapDataToSring();
+
+        /*       JSONObject obj = new JSONObject(inString);
+        int x = obj.getInt("X");
+        int y = obj.getInt("Y");
+        Pair cellLocation = new Pair(x, y);
+
+        //returnString = world.getCellDataToSring(x,y);
+        */
     }
 }
     public synchronized Pair GetCellPoint(String jsonString) throws JSONException

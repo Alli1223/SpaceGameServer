@@ -1,6 +1,7 @@
 // World class contains the map of cells and get and set functions for setting what the world looks like
 // Is a Singleton Class
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
@@ -27,7 +28,7 @@ public class World
 		for(int x = -startAreaSize; x < startAreaSize; x++) {
             for (int y = -startAreaSize; y < startAreaSize; y++) {
                 Cell newCell = new Cell();
-                newCell.setCellContent("NULL");
+                newCell.setCellContent("null");
                 Pair newPair = new Pair(x, y);
 
                 map.put(newPair, newCell);
@@ -35,8 +36,31 @@ public class World
             //System.out.println("Creating start area " + x + " of " + startAreaSize);
         }
 	}
+	public synchronized String getCellDataToSring(int x, int y)
+    {
+        String returnString = "null";
+       Cell cl =  map.get(new Pair(x,y));
+        returnString = cl.getCellContent();
+        return returnString;
+    }
+
+	//Not Used
+    public  synchronized String getMapDataToSring()
+    {
+        String mapData = "null";
+
+        //Loop through all the cells and get the cells that contain data and concat them to mapData
+        for (Cell value : map.values()) {
+            // If the cell contains data
+            if(value.getCellContent() != "null") {
+
+                mapData = mapData.concat(value.getCellContent());
+            }
+        }
 
 
+        return mapData;
+    }
 	public  synchronized void setCell(Pair point, String content)
     {
         // If map contains a value and map value is not the same as the new content
