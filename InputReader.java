@@ -23,7 +23,7 @@ public class InputReader
     {
         inString = inString.substring(18);
 
-        returnString = world.getMapDataToSring();
+        returnString = world.getMapDataToString();
 
         /*       JSONObject obj = new JSONObject(inString);
         int x = obj.getInt("X");

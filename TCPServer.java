@@ -230,15 +230,15 @@ class clientThread extends Thread {
 
 
 				// Send all players positions to all clients
-                if(clientName != "mapDataSocket") {
+
                     // concurrently send strings of player positions to all the clients
                     for (int i = 0; i < maxClientsCount; i++) {
-                        if (threads[i] != null && threads[i].clientName != null) {
-                            outStream.println("{<" + threads[i].clientName + "> X:" + threads[i].character.getX() + ". Y:" + threads[i].character.getY() + ".}\n");
-
+                        if (threads[i] != null && threads[i].clientName != null)
+                        {
+								outStream.println("{<" + threads[i].clientName + "> X:" + threads[i].character.getX() + ". Y:" + threads[i].character.getY() + ".}\n");
                         }
                     }
-                }
+
 				
 
 				// Disconnect the client if they send the quit message

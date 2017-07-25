@@ -45,7 +45,7 @@ public class World
     }
 
 	//Not Used
-    public  synchronized String getMapDataToSring()
+    public  synchronized String getMapDataToString()
     {
         String mapData = "null";
 
