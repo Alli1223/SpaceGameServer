@@ -165,12 +165,17 @@ class clientThread extends Thread {
 
             // Fill the json
             try {
-                localPlayerData.put("name", clientName);
-                localPlayerData.put("X", character.getX());
-                localPlayerData.put("Y", character.getY());
-                nestedPlayerData.put(localPlayerData);
-                PlayerData.put(clientName, nestedPlayerData);
-                TCPServer.getInstance().globalNetworkData.put("PlayerData", PlayerData);
+                for (int i = 0; i < maxClientsCount; i++) {
+                    if (threads[i] != null && threads[i].clientName != null)
+                    {
+                        localPlayerData.put("name", threads[i].clientName);
+                        localPlayerData.put("X", threads[i].character.getX());
+                        localPlayerData.put("Y", threads[i].character.getY());
+                        //nestedPlayerData.put(localPlayerData);
+                        PlayerData.put("Players", localPlayerData);
+                        TCPServer.getInstance().globalNetworkData.put("PlayerData", PlayerData);
+                    }
+                }
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -193,18 +198,19 @@ class clientThread extends Thread {
                     System.out.println("JSON ERRROR: " + e);
                 }
 
-                //outStream.flush();
 
 
                 outStream.println(TCPServer.getInstance().globalNetworkData.toString());
+                outStream.flush();
+
+
                 // Send all players positions to all clients
                 // concurrently send strings of player positions to all the clients
                 for (int i = 0; i < maxClientsCount; i++) {
                     if (threads[i] != null && threads[i].clientName != null)
                     {
-
                         //outStream.println("{<" + threads[i].clientName + "> X:" + threads[i].character.getX() + ". Y:" + threads[i].character.getY() + ".}\n");
-                        outStream.println(TCPServer.getInstance().globalNetworkData.toString());
+                        //outStream.println(TCPServer.getInstance().globalNetworkData.toString());
                     }
                 }
 
