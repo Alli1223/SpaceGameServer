@@ -11,18 +11,13 @@ public class Character {
 	private String name;
 	
 	// Potential next X
-	public int nextX = 0;
+	private int nextX = 0;
 	//Potential next Y
 	private int nextY = 0;
 	
 	private int speed = 3;
-	
-	// Possible movement commands
-	private static String movementCommands[] = {
-	        "NORTH", "SOUTH", "EAST", "WEST"
-	    };
-	
-	//private World map = World.getInstance();
+
+	private String playerDataJson;
 
 	// Sets character x and y on initialisation
 	public Character(int initialX, int initialY) {
@@ -53,6 +48,7 @@ public class Character {
 		x = newX;
 		y = newY;
 	}
+	//Get and set player name
 	public void setName(String newName)
 	{
 		name = newName;
@@ -62,56 +58,8 @@ public class Character {
 		return name;
 	}
 
-	/*
-	// Checks to see which cell on the map the character is currently on
-	public Cell getCurrentCell(){
-		return map.getCells()[x][y];
-	}
-	
-	// Checks a cell in the map to see if it's free
-	public boolean checkForFreeCell()
-	{
-		if (map.getCells()[nextX][nextY].getCellContent() == null 
-				&& !(map.getCells()[nextX ][nextY].cellTaken))
-			return true;
-		else
-			return false;
-	}	
-	*/
-	// Checks string is valid and updates character position
-	public synchronized void moveCharacter(String inputMovement){
-		inputMovement = inputMovement.toUpperCase();
-		
-		if (inputMovement.equals("MOVE_EAST"))
-		{
-			//if(nextX + speed <= map.getCells().length * map.getCellSize())
-				nextX = nextX + speed;
-		}
-		else if (inputMovement.equals("MOVE_WEST"))
-		{
-			//if(nextX - speed / map.getCellSize() >= 0)
-				nextX = nextX - speed;
-		}
-		else if (inputMovement.equals("MOVE_NORTH"))
-		{
-			//if(nextY - speed / map.getCellSize() >= 0)
-			nextY = nextY - speed;
-		}
-		else if (inputMovement.equals("MOVE_SOUTH"))
-		{
-			//if(nextY + speed <= map.getCells().length * map.getCellSize())
-			nextY = nextY + speed;
-		}
-
-		setPosition(nextX, nextY);
-		/*
-		if (checkForFreeCell())
-		{
-			getCurrentCell().cellTaken = false;
-			setPosition(nextX, nextY);
-			getCurrentCell().cellTaken = true;
-		}
-		*/
-	}
+	//Get and set player json data
+	public String getPlayerDataJson() { return playerDataJson;}
+	public String setPlayerDataJson(String newJsonData){ return playerDataJson = newJsonData; }
 	
 }

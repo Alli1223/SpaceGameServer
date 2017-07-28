@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.ServerSocket;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,14 +14,12 @@ public class TCPServer {
     StringBuilder AllActions = new StringBuilder();
     private static TCPServer tCPServer = new TCPServer();
 
-    public String outputCommands = null;
+    public JSONObject globalNetworkData = new JSONObject();
 
     // The server socket.
     private static ServerSocket serverSocket = null;
     // The client socket.
     private static Socket clientSocket = null;
-
-    public int numOfConnectedClients = 0;
 
     // This chat server can accept up to maxClientsCount clients' connections.
     private static final int maxClientsCount = 40;
@@ -106,9 +105,13 @@ class clientThread extends Thread {
 
     private InputReader ir = new InputReader();
     private int maxClientsCount;
-    private Character character = new Character(100, 100);
+    private Character character = new Character(0, 0);
     private World map = World.getInstance();
     private final int ID;
+
+    private JSONObject localPlayerData = new JSONObject();
+    private JSONArray nestedPlayerData = new JSONArray();
+    private JSONObject PlayerData = new JSONObject();
 
 
     public clientThread(Socket clientSocket, clientThread[] threads, int ID) {
@@ -139,13 +142,11 @@ class clientThread extends Thread {
             outStream = new PrintStream(clientSocket.getOutputStream());
             String name = inStream.readLine();
 
-			/* Welcome the new the client. */
+			/* Get clients ID and info from first message sent */
             outStream.println("{<" + name + "> X:" + character.getX() + " Y:" + character.getY() + "}");
-            TCPServer.getInstance().numOfConnectedClients++;
 
             outStream.flush();
-            //Database.insertIntoHighscoreDatabase(this.getID(), clientName, 10);
-            //Database.printHighscoreDatabase();
+
             // Send player update info to all the other clients
             synchronized (this) {
                 for (int i = 0; i < maxClientsCount; i++) {
@@ -162,6 +163,21 @@ class clientThread extends Thread {
                 }
             }
 
+            // Fill the json
+            try {
+                localPlayerData.put("name", clientName);
+                localPlayerData.put("X", character.getX());
+                localPlayerData.put("Y", character.getY());
+                nestedPlayerData.put(localPlayerData);
+                PlayerData.put(clientName, nestedPlayerData);
+                TCPServer.getInstance().globalNetworkData.put("PlayerData", PlayerData);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+
 
 
 
@@ -170,53 +186,25 @@ class clientThread extends Thread {
                 String line = inStream.readLine().trim();
 
 
-                //String used for getting values from json
-                String retrunString = "null";
-
-                ir.ProcessPlayerMovement(line, character);
-
                 // Proccess the json
                 try {
-                    ir.ProcessJson(line, retrunString, character, map);
+                    ir.ProcessJson(line, character, map);
                 } catch (JSONException e) {
                     System.out.println("JSON ERRROR: " + e);
                 }
 
-                // Send celldata if cellData is requested
-                if (retrunString != "null") {
-                    System.out.println("Return String = " + retrunString);
-                    if (retrunString != "null")
-                        outStream.println(retrunString);
-                }
+                //outStream.flush();
 
 
-                outStream.flush();
-
-                // Sends number of players ins session
-                if (line.equals("NUMBER_OF_PLAYERS_REQUEST")) {
-                    int numberOfCurrentPlayers = 0;
-                    for (int j = 0; j < maxClientsCount; j++) {
-                        if (threads[j] != null && threads[j].clientName != null) {
-                            numberOfCurrentPlayers++;
-                        }
-                    }
-                    //Print player number
-                    outStream.println("[#:" + 0 + numberOfCurrentPlayers + "].");
-                    outStream.flush();
-                }
-
-
-                //Process actions
-                if (line.equals("PLACE_BED") || line.equals("PLACE_BOX")) {
-                    //map.setCell(character.getX() / map.getCellSize(), character.getY() / map.getCellSize(), line);
-                }
-
-
+                outStream.println(TCPServer.getInstance().globalNetworkData.toString());
                 // Send all players positions to all clients
                 // concurrently send strings of player positions to all the clients
                 for (int i = 0; i < maxClientsCount; i++) {
-                    if (threads[i] != null && threads[i].clientName != null) {
+                    if (threads[i] != null && threads[i].clientName != null)
+                    {
+
                         //outStream.println("{<" + threads[i].clientName + "> X:" + threads[i].character.getX() + ". Y:" + threads[i].character.getY() + ".}\n");
+                        outStream.println(TCPServer.getInstance().globalNetworkData.toString());
                     }
                 }
 
