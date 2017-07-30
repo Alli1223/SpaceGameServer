@@ -168,12 +168,12 @@ class clientThread extends Thread {
                 for (int i = 0; i < maxClientsCount; i++) {
                     if (threads[i] != null && threads[i].clientName != null)
                     {
-                        localPlayerData.put("name", threads[i].clientName);
-                        localPlayerData.put("X", threads[i].character.getX());
-                        localPlayerData.put("Y", threads[i].character.getY());
+                        TCPServer.getInstance().globalNetworkData.put("name", threads[i].clientName);
+                        TCPServer.getInstance().globalNetworkData.put("X", threads[i].character.getX());
+                        TCPServer.getInstance().globalNetworkData.put("Y", threads[i].character.getY());
                         //nestedPlayerData.put(localPlayerData);
-                        PlayerData.put("Players", localPlayerData);
-                        TCPServer.getInstance().globalNetworkData.put("PlayerData", PlayerData);
+                        //PlayerData.put("Players", localPlayerData);
+                        //TCPServer.getInstance().globalNetworkData.put("PlayerData", localPlayerData);
                     }
                 }
 

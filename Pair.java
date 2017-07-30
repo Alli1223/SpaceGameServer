@@ -25,5 +25,4 @@ public class Pair {
         result = 31 * result + y;
         return result;
     }
-
 }
