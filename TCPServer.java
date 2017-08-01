@@ -3,6 +3,12 @@ import java.io.PrintStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.ServerSocket;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,26 +17,27 @@ import org.json.JSONObject;
 //Source From http://makemobiapps.blogspot.co.uk/p/multiple-client-server-chat-programming.html
 
 public class TCPServer {
-    StringBuilder AllActions = new StringBuilder();
     private static TCPServer tCPServer = new TCPServer();
 
     public JSONObject globalNetworkData = new JSONObject();
 
+    private static NetworkManager networkManager = NetworkManager.getInstance();
     // The server socket.
     private static ServerSocket serverSocket = null;
     // The client socket.
     private static Socket clientSocket = null;
+    private static Timer timer = new Timer();
+
 
     // This chat server can accept up to maxClientsCount clients' connections.
-    private static final int maxClientsCount = 40;
+    public static final int maxClientsCount = 40;
     private static final clientThread[] threads = new clientThread[maxClientsCount];
 
-    //Our Code////////////////////////////////////////////////////////////
     public clientThread[] GetThreads() {
         return threads;
     }
 
-    //Get the instance of this server
+    // Get the instance of this server
     public static TCPServer getInstance() {
         return tCPServer;
     }
@@ -38,7 +45,6 @@ public class TCPServer {
     private TCPServer() {
     }
 
-    //Our code ends////////////////////////////////////////////////////////
     public static void main(String args[]) throws JSONException {
 
         // The default port number.
@@ -52,13 +58,6 @@ public class TCPServer {
             portNumber = Integer.valueOf(args[0]).intValue();
         }
 
-		
-
-		/*
-		 * Open a server socket on the portNumber (default 2222). Note that we
-		 * can not choose a port less than 1023 if we are not privileged users
-		 * (root).
-		 */
         try {
             serverSocket = new ServerSocket(portNumber);
         } catch (IOException e) {
@@ -89,6 +88,17 @@ public class TCPServer {
             } catch (IOException e) {
                 System.out.println(e);
             }
+
+            //Update the network managers list of players
+            // Sort player list at a regular interval
+
+
+            timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    networkManager.Update();
+                }
+            }, 0, networkManager.updateTime);
         }
     }
 }
@@ -101,7 +111,6 @@ class clientThread extends Thread {
     private PrintStream outStream = null;
     private Socket clientSocket = null;
     private final clientThread[] threads;
-    //Our Code////////////////////////////////////////////////////////////
 
     private InputReader ir = new InputReader();
     private int maxClientsCount;
@@ -110,8 +119,7 @@ class clientThread extends Thread {
     private final int ID;
 
     private JSONObject localPlayerData = new JSONObject();
-    private JSONArray nestedPlayerData = new JSONArray();
-    private JSONObject PlayerData = new JSONObject();
+
 
 
     public clientThread(Socket clientSocket, clientThread[] threads, int ID) {
@@ -163,25 +171,30 @@ class clientThread extends Thread {
                 }
             }
 
+            /*
             // Fill the json
-            try {
-                for (int i = 0; i < maxClientsCount; i++) {
+            try
+            {
+                JSONArray nestedPlayerData = new JSONArray();
+                for (int i = 0; i < maxClientsCount; i++)
+                {
                     if (threads[i] != null && threads[i].clientName != null)
                     {
-                        TCPServer.getInstance().globalNetworkData.put("name", threads[i].clientName);
-                        TCPServer.getInstance().globalNetworkData.put("X", threads[i].character.getX());
-                        TCPServer.getInstance().globalNetworkData.put("Y", threads[i].character.getY());
-                        //nestedPlayerData.put(localPlayerData);
-                        //PlayerData.put("Players", localPlayerData);
-                        //TCPServer.getInstance().globalNetworkData.put("PlayerData", localPlayerData);
+                        localPlayerData.put("name", threads[i].clientName);
+                        localPlayerData.put("X", threads[i].character.getX());
+                        localPlayerData.put("Y", threads[i].character.getY());
+                        nestedPlayerData.put(localPlayerData);
+
                     }
                 }
+                TCPServer.getInstance().globalNetworkData.put("PlayerData", nestedPlayerData);
+                //nestedPlayerData.remove(0);
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-
+*/
 
 
 
@@ -190,17 +203,41 @@ class clientThread extends Thread {
             while (true) {
                 String line = inStream.readLine().trim();
 
-
-                // Proccess the json
+                // Proccess the json and update plaer positions from it
                 try {
                     ir.ProcessJson(line, character, map);
                 } catch (JSONException e) {
                     System.out.println("JSON ERRROR: " + e);
                 }
 
+                // Add the characters position to the network send pool
+                try
+                {
+                    JSONArray nestedPlayerData = new JSONArray();
+
+                    localPlayerData.put("name",clientName);
+                    localPlayerData.put("X", character.getX());
+                    localPlayerData.put("Y", character.getY());
+                    //nestedPlayerData.put(localPlayerData);
+
+                    //TCPServer.getInstance().globalNetworkData.put("PlayerData", localPlayerData);
+                    NetworkManager.getInstance().AddToPlayerUpdateList(localPlayerData, ID);
+                    //nestedPlayerData.remove(0);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                //TCPServer.getInstance().allPlayers.put(ID, localPlayerData);
 
 
-                outStream.println(TCPServer.getInstance().globalNetworkData.toString());
+
+
+
+                // SEND THE CLIENT THE POSITIONS OF ALL PLAYERS IN JSON
+                outStream.println(NetworkManager.getInstance().getAllPlayersNetworkData());
+                //TCPServer.getInstance().globalNetworkData.remove("PlayerData");
+
                 outStream.flush();
 
 
