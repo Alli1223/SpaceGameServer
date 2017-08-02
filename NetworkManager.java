@@ -39,7 +39,7 @@ public class NetworkManager //Singleton class
     {
         for (int i = 0; i < TCPServer.getInstance().maxClientsCount; i++)
         {
-            //E
+
             if (listOfCurrentPlayers[i] == null)
             {
                 listOfCurrentPlayers[i] = name;
@@ -59,8 +59,6 @@ public class NetworkManager //Singleton class
             // IF Player does not exist add to pending network pool
             if(!DoesPlayerExist(name))
             {
-
-
                 allPlayers.put(id,playerJsonObject);
                 AddPlayerToList(name);
             }
@@ -98,7 +96,7 @@ public class NetworkManager //Singleton class
     public void Update()
     {
 
-        EmptyJsonList();
+        //EmptyJsonList();
 
     }
 

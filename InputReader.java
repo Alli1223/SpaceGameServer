@@ -26,9 +26,12 @@ public class InputReader
         JSONObject obj = new JSONObject(inString);
         int x = obj.getInt("X");
         int y = obj.getInt("Y");
-        System.out.println(x + " " + y + " ");
+        int rotation = obj.getInt("rotation");
+
+
         //update player position
         character.setPosition(x,y);
+        character.setRotation(rotation);
     }
 
     if (inString.startsWith("[RequestMapUpdate]"))

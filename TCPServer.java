@@ -166,37 +166,10 @@ class clientThread extends Thread {
                 }
                 for (int i = 0; i < maxClientsCount; i++) {
                     if (threads[i] != null && threads[i] != this) {
-                        threads[i].outStream.println("{<" + name + "> X:" + character.getX() + " Y:" + character.getY() + "}");
+                        threads[i].outStream.println("Welcome " + name);
                     }
                 }
             }
-
-            /*
-            // Fill the json
-            try
-            {
-                JSONArray nestedPlayerData = new JSONArray();
-                for (int i = 0; i < maxClientsCount; i++)
-                {
-                    if (threads[i] != null && threads[i].clientName != null)
-                    {
-                        localPlayerData.put("name", threads[i].clientName);
-                        localPlayerData.put("X", threads[i].character.getX());
-                        localPlayerData.put("Y", threads[i].character.getY());
-                        nestedPlayerData.put(localPlayerData);
-
-                    }
-                }
-                TCPServer.getInstance().globalNetworkData.put("PlayerData", nestedPlayerData);
-                //nestedPlayerData.remove(0);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-*/
-
-
 
 
 			/* Each Thread will Process their command */
@@ -216,33 +189,22 @@ class clientThread extends Thread {
                     JSONArray nestedPlayerData = new JSONArray();
 
                     localPlayerData.put("name",clientName);
+                    localPlayerData.put("rotation", character.getRotation());
                     localPlayerData.put("X", character.getX());
                     localPlayerData.put("Y", character.getY());
-                    //nestedPlayerData.put(localPlayerData);
-
-                    //TCPServer.getInstance().globalNetworkData.put("PlayerData", localPlayerData);
                     NetworkManager.getInstance().AddToPlayerUpdateList(localPlayerData, ID);
-                    //nestedPlayerData.remove(0);
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                //TCPServer.getInstance().allPlayers.put(ID, localPlayerData);
-
-
-
-
 
                 // SEND THE CLIENT THE POSITIONS OF ALL PLAYERS IN JSON
                 outStream.println(NetworkManager.getInstance().RequestAllPlayerData());
-                //TCPServer.getInstance().globalNetworkData.remove("PlayerData");
 
                 outStream.flush();
 
 
-                // Send all players positions to all clients
-                // concurrently send strings of player positions to all the clients
+                /* OLD CODE
                 for (int i = 0; i < maxClientsCount; i++) {
                     if (threads[i] != null && threads[i].clientName != null)
                     {
@@ -250,7 +212,7 @@ class clientThread extends Thread {
                         //outStream.println(TCPServer.getInstance().globalNetworkData.toString());
                     }
                 }
-
+                */
 
                 // Disconnect the client if they send the quit message
                 if (line.equals("QUIT")) {

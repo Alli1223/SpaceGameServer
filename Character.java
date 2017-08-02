@@ -14,6 +14,7 @@ public class Character {
 	private int nextX = 0;
 	//Potential next Y
 	private int nextY = 0;
+	private int rotation = 0;
 	
 	private int speed = 3;
 
@@ -42,6 +43,10 @@ public class Character {
 	public int getY(){
 		return y;
 	}
+	// Get rotation value
+	public int getRotation(){ return rotation; }
+	// Set rotation value
+	public int setRotation(int newRotation){ return rotation = newRotation; }
 
 	// Sets character position
 	public void setPosition(int newX, int newY) {
