@@ -39,8 +39,8 @@ public class NetworkManager //Singleton class
     {
         for (int i = 0; i < TCPServer.getInstance().maxClientsCount; i++)
         {
-            //ERROR
-            if (listOfCurrentPlayers[i].isEmpty())
+            //E
+            if (listOfCurrentPlayers[i] == null)
             {
                 listOfCurrentPlayers[i] = name;
                 return;
@@ -78,7 +78,7 @@ public class NetworkManager //Singleton class
         JSONArray arrayOfPlayerData = new JSONArray();
         for(int i=0; i < TCPServer.getInstance().maxClientsCount; i++)
         {
-            if(allPlayers.get(i).length() > 1)
+            if(allPlayers.get(i) != null)
                 arrayOfPlayerData.put(allPlayers.get(i));
         }
         try

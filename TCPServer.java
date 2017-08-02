@@ -235,7 +235,7 @@ class clientThread extends Thread {
 
 
                 // SEND THE CLIENT THE POSITIONS OF ALL PLAYERS IN JSON
-                outStream.println(NetworkManager.getInstance().getAllPlayersNetworkData());
+                outStream.println(NetworkManager.getInstance().RequestAllPlayerData());
                 //TCPServer.getInstance().globalNetworkData.remove("PlayerData");
 
                 outStream.flush();
