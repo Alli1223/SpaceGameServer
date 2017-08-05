@@ -174,6 +174,7 @@ class clientThread extends Thread {
 
 			/* Each Thread will Process their command */
             while (true) {
+
                 String line = inStream.readLine().trim();
 
                 // Proccess the json and update plaer positions from it
@@ -186,8 +187,6 @@ class clientThread extends Thread {
                 // Add the characters position to the network send pool
                 try
                 {
-                    JSONArray nestedPlayerData = new JSONArray();
-
                     localPlayerData.put("name",clientName);
                     localPlayerData.put("rotation", character.getRotation());
                     localPlayerData.put("X", character.getX());
@@ -197,6 +196,9 @@ class clientThread extends Thread {
                     e.printStackTrace();
                 }
 
+
+                String test = NetworkManager.getInstance().RequestAllPlayerData();
+                ;
 
                 // SEND THE CLIENT THE POSITIONS OF ALL PLAYERS IN JSON
                 outStream.println(NetworkManager.getInstance().RequestAllPlayerData());
