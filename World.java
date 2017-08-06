@@ -1,5 +1,8 @@
 // World class contains the map of cells and get and set functions for setting what the world looks like
 // Is a Singleton Class
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,18 +47,26 @@ public class World
     }
 
 	//TODO: return mapdata but as a JSON Object, not as string.
-    public  synchronized String getMapDataToString()
+    public  synchronized JSONArray getMapDataToJsonArray()
     {
-        String mapData = "";
-
+        JSONArray cellDataArray = new JSONArray();
         //Loop through all the cells and get the cells that contain data and concat them to mapData
         for (Cell value : map.values()) {
             // If the cell contains data
-            if(value.getCellContent() != "null") {
-                mapData = mapData.concat(value.getCellContent());
+            if(value.getCellContent() != "null")
+            {
+                try {
+                    JSONObject celLData = new JSONObject(value.getCellContent());
+
+                    cellDataArray.put(celLData);
+                }
+                catch (Exception e)
+                {
+                    System.out.println("Error creating json object from cell data:" + e);
+                }
             }
         }
-        return mapData;
+        return cellDataArray;
     }
 
 	public  synchronized void setCell(Pair point, String content)

@@ -80,7 +80,7 @@ public class NetworkManager //Singleton class
     {
         JSONObject allWorldJsonData = new JSONObject();
 
-       String worldData = World.getInstance().getMapDataToString();
+       JSONArray worldData = World.getInstance().getMapDataToJsonArray();
        try {
            allWorldJsonData.put("MapData", worldData);
            return allWorldJsonData.toString();

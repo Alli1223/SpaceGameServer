@@ -57,7 +57,7 @@ public class InputReader
         //returnString = world.getMapDataToString();
 
 
-        TCPServer.getInstance().globalNetworkData.put("MapData", World.getInstance().getMapDataToString());
+        //TCPServer.getInstance().globalNetworkData.put("MapData", World.getInstance().getMapDataToString());
     }
 }
     public synchronized Pair GetCellPoint(String jsonString) throws JSONException
