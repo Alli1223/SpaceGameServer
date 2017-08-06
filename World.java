@@ -23,7 +23,7 @@ public class World
 
 	// Constructor creates the start area for the map to save processing later in the game
 	private World() {
-        int startAreaSize = 10;
+        int startAreaSize = 100;
 		map = new ConcurrentHashMap<Pair, Cell>();
 		for(int x = -startAreaSize; x < startAreaSize; x++) {
             for (int y = -startAreaSize; y < startAreaSize; y++) {
@@ -38,29 +38,26 @@ public class World
 	}
 	public synchronized String getCellDataToSring(int x, int y)
     {
-        String returnString = "null";
        Cell cl =  map.get(new Pair(x,y));
-        returnString = cl.getCellContent();
+        String returnString = cl.getCellContent();
         return returnString;
     }
 
-	//Not Used
+	//TODO: return mapdata but as a JSON Object, not as string.
     public  synchronized String getMapDataToString()
     {
-        String mapData = "null";
+        String mapData = "";
 
         //Loop through all the cells and get the cells that contain data and concat them to mapData
         for (Cell value : map.values()) {
             // If the cell contains data
             if(value.getCellContent() != "null") {
-
                 mapData = mapData.concat(value.getCellContent());
             }
         }
-
-
         return mapData;
     }
+
 	public  synchronized void setCell(Pair point, String content)
     {
         // If map contains a value and map value is not the same as the new content

@@ -15,7 +15,7 @@ public class Character {
 	//Potential next Y
 	private int nextY = 0;
 	private int rotation = 0;
-	
+	private int ID = 0;
 	private int speed = 3;
 
 	private String playerDataJson;
@@ -26,6 +26,22 @@ public class Character {
 		nextX = x;
 		nextY = y;
 	}
+	//Get and set player name
+	public void setName(String newName)
+	{
+		name = newName;
+	}
+	public String getName()
+	{
+		return name;
+	}
+
+	//Get and set player json data
+	public String getPlayerDataJson() { return playerDataJson;}
+	public String setPlayerDataJson(String newJsonData){ return playerDataJson = newJsonData; }
+
+	public int getID() { return ID;}
+	public int setID(int newID){ return ID = newID; }
 
 	// Gets character position
 	public int[] getPosition() {
@@ -53,18 +69,6 @@ public class Character {
 		x = newX;
 		y = newY;
 	}
-	//Get and set player name
-	public void setName(String newName)
-	{
-		name = newName;
-	}
-	public String getName()
-	{
-		return name;
-	}
 
-	//Get and set player json data
-	public String getPlayerDataJson() { return playerDataJson;}
-	public String setPlayerDataJson(String newJsonData){ return playerDataJson = newJsonData; }
 	
 }

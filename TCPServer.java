@@ -93,12 +93,7 @@ public class TCPServer {
             // Sort player list at a regular interval
 
 
-            timer.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    networkManager.Update();
-                }
-            }, 0, networkManager.updateTime);
+
         }
     }
 }
@@ -149,6 +144,8 @@ class clientThread extends Thread {
             inStream = new DataInputStream(clientSocket.getInputStream());
             outStream = new PrintStream(clientSocket.getOutputStream());
             String name = inStream.readLine();
+            character.setName(name);
+            character.setID(ID);
 
 			/* Get clients ID and info from first message sent */
             outStream.println("{<" + name + "> X:" + character.getX() + " Y:" + character.getY() + "}");
@@ -156,7 +153,8 @@ class clientThread extends Thread {
             outStream.flush();
 
             // Send player update info to all the other clients
-            synchronized (this) {
+            synchronized (this)
+            {
                 for (int i = 0; i < maxClientsCount; i++) {
                     if (threads[i] != null && threads[i] == this) {
                         System.out.println("Player " + name + " Joined.");
@@ -173,35 +171,27 @@ class clientThread extends Thread {
 
 
 			/* Each Thread will Process their command */
-            while (true) {
+            while (true)
+            {
 
                 String line = inStream.readLine().trim();
 
-                // Proccess the json and update plaer positions from it
+                // Proccess the json and update player positions from it
                 try {
-                    ir.ProcessJson(line, character, map);
+                    ir.ProcessJson(line,localPlayerData, character, map);
                 } catch (JSONException e) {
                     System.out.println("JSON ERRROR: " + e);
                 }
 
-                // Add the characters position to the network send pool
-                try
-                {
-                    localPlayerData.put("name",clientName);
-                    localPlayerData.put("rotation", character.getRotation());
-                    localPlayerData.put("X", character.getX());
-                    localPlayerData.put("Y", character.getY());
-                    NetworkManager.getInstance().AddToPlayerUpdateList(localPlayerData, ID);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-
-                String test = NetworkManager.getInstance().RequestAllPlayerData();
-                ;
-
                 // SEND THE CLIENT THE POSITIONS OF ALL PLAYERS IN JSON
-                outStream.println(NetworkManager.getInstance().RequestAllPlayerData());
+                if (line.startsWith("[PlayerUpdate]")) {
+                    outStream.println(NetworkManager.getInstance().RequestAllPlayerData());
+                }
+                // otherwise send the mapdata
+                else if(line.startsWith("[RequestMapUpdate]"))
+                {
+                    outStream.println(NetworkManager.getInstance().RequestAllMapData());
+                }
 
                 outStream.flush();
 
