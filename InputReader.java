@@ -29,6 +29,7 @@ public class InputReader
         int x = obj.getInt("X");
         int y = obj.getInt("Y");
         boolean fence = obj.getBoolean("Fence");
+        boolean dirt = obj.getBoolean("Dirt");
         System.out.println(x + " " + y + " ");
         Pair cellLocation = new Pair(x, y);
         world.setCell(cellLocation,obj.toString());
