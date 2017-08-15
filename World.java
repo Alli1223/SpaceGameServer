@@ -53,7 +53,7 @@ public class World
         //Loop through all the cells and get the cells that contain data and concat them to mapData
         for (Cell value : map.values()) {
             // If the cell contains data
-            if(value.getCellContent() != "null")
+            if(!value.getCellContent().equals("null"))
             {
                 try {
                     JSONObject celLData = new JSONObject(value.getCellContent());
@@ -74,7 +74,7 @@ public class World
         // If map contains a value and map value is not the same as the new content
         if(map.containsKey(point))
         {
-            if(map.get(point).getCellContent() != content)
+            if(!map.get(point).getCellContent().equals(content))
             {
                 // put the new cell content into the cell
                 map.put(point, map.get(point)).setCellContent(content);

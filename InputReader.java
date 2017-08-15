@@ -30,7 +30,7 @@ public class InputReader
         int y = obj.getInt("Y");
         boolean fence = obj.getBoolean("Fence");
         boolean dirt = obj.getBoolean("Dirt");
-        System.out.println(x + " " + y + " ");
+        System.out.println("Cell at X:" + x + ", Y:" + y + " changed.");
         Pair cellLocation = new Pair(x, y);
         world.setCell(cellLocation,obj.toString());
     }
