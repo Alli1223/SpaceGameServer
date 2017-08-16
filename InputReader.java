@@ -12,6 +12,13 @@ public class InputReader
         localPlayerData.put("rotation", character.getRotation());
         localPlayerData.put("X", character.getX());
         localPlayerData.put("Y", character.getY());
+        localPlayerData.put("isMoving", character.isMoving);
+        localPlayerData.put("headWear", character.getHearWear());
+        localPlayerData.put("hairColour", character.getHairColour());
+        localPlayerData.put("eyeColour", character.getEyeColour());
+        localPlayerData.put("bodyWear", character.getBodyWear());
+        localPlayerData.put("legWear", character.getLegWear());
+
         NetworkManager.getInstance().AddToPlayerUpdateList(localPlayerData, character.getID());
 
     } catch (JSONException e)
@@ -44,9 +51,17 @@ public class InputReader
         int x = obj.getInt("X");
         int y = obj.getInt("Y");
         int rotation = obj.getInt("rotation");
+        boolean isMoving = obj.getBoolean("isMoving");
+        int headWear = obj.getInt("headWear");
+        int hairColour = obj.getInt("hairColour");
+        int eyeColour = obj.getInt("eyeColour");
+        int bodyWear = obj.getInt("bodyWear");
+        int legWear = 0;//obj.getInt("legWear");
 
 
-        //update player position
+        //set character deets
+        character.isMoving = isMoving;
+        character.setPlayerClothes(headWear, hairColour, eyeColour, bodyWear, legWear);
         character.setPosition(x,y);
         character.setRotation(rotation);
     }

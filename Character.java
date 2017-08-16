@@ -18,6 +18,29 @@ public class Character {
 	private int ID = 0;
 	private int speed = 3;
 
+	public boolean isMoving = false;
+	private int headWear = 0;
+    private int hairColour = 0;
+    private int eyeColour = 0;
+    private int bodyWear = 0;
+    private int legWear = 0;
+
+    public int getHearWear() { return headWear; }
+    public int getHairColour() { return hairColour; }
+    public int getEyeColour() { return eyeColour; }
+    public int getBodyWear() { return bodyWear; }
+    public int getLegWear() { return legWear; }
+
+
+    public void setPlayerClothes(int newHeadWear, int newHairColour, int newEyeColour, int newBodyWear, int newLegWear)
+    {
+        headWear = newHeadWear;
+        hairColour = newHairColour;
+        eyeColour = newEyeColour;
+        bodyWear = newBodyWear;
+        legWear = newLegWear;
+    }
+
 	private String playerDataJson;
 
 	// Sets character x and y on initialisation
