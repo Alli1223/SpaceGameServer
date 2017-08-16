@@ -164,7 +164,7 @@ class clientThread extends Thread {
                 }
                 for (int i = 0; i < maxClientsCount; i++) {
                     if (threads[i] != null && threads[i] != this) {
-                        threads[i].outStream.println("Welcome " + name);
+                        //threads[i].outStream.println("Welcome " + name);
                     }
                 }
             }
@@ -207,29 +207,21 @@ class clientThread extends Thread {
                 */
 
                 // Disconnect the client if they send the quit message
-                if (line.equals("QUIT")) {
-                    synchronized (this) {
-                        for (int i = 0; i < maxClientsCount; i++) {
-                            if (threads[i] != null && threads[i] != this && threads[i].clientName != null) {
-                                threads[i].outStream.println("The player " + name + " is leaving");
-                            }
-                        }
-                    }
+                if (line.equals("QUIT"))
+                {
+                    //TODO: Handle quit properly and destroy player
                     System.out.println("Player " + name + " Leaving");
 
-
-                    synchronized (this) {
+                    synchronized (this)
+                    {
                         for (int i = 0; i < maxClientsCount; i++) {
                             if (threads[i] == this) {
                                 threads[i] = null;
                             }
                         }
                     }
-					/*
-					 * Close the output stream, close the input stream, close the
-					 * socket.
-					 */
 
+                    // Close thread socket
                     inStream.close();
                     outStream.close();
                     clientSocket.close();
