@@ -1,3 +1,7 @@
+import org.json.JSONObject;
+
+import java.awt.*;
+
 public class Character {
 	
 	Character(){
@@ -20,25 +24,54 @@ public class Character {
 
 	public boolean isMoving = false;
 	private int headWear = 0;
-    private int hairColour = 0;
-    private int eyeColour = 0;
+	private Color hairColour = new Color(0,0,0);
+    private Color eyeColour = new Color(0,0,0);
     private int bodyWear = 0;
     private int legWear = 0;
 
     public int getHearWear() { return headWear; }
-    public int getHairColour() { return hairColour; }
-    public int getEyeColour() { return eyeColour; }
     public int getBodyWear() { return bodyWear; }
     public int getLegWear() { return legWear; }
+    public Color getHairColour() { return hairColour; }
+    public Color getEyeColour() { return eyeColour; }
+    public Color setHairColour(Color newHairColor) { return  hairColour = newHairColor; }
+    public Color setEyeColour(Color newEyeColor) { return eyeColour = newEyeColor; }
 
-
-    public void setPlayerClothes(int newHeadWear, int newHairColour, int newEyeColour, int newBodyWear, int newLegWear)
+    public void setPlayerClothes(int newHeadWear, int newBodyWear, int newLegWear)
     {
         headWear = newHeadWear;
-        hairColour = newHairColour;
-        eyeColour = newEyeColour;
         bodyWear = newBodyWear;
         legWear = newLegWear;
+    }
+    public JSONObject getHairColourJson()
+    {
+        JSONObject returnjson = new JSONObject();
+        try {
+            returnjson.put("r", getHairColour().getRed());
+            returnjson.put("g", getHairColour().getGreen());
+            returnjson.put("b", getHairColour().getBlue());
+
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error getting hair colour to json " + e);
+        }
+        return returnjson;
+    }
+    public JSONObject getEyeColourJson()
+    {
+        JSONObject returnjson = new JSONObject();
+        try {
+            returnjson.put("r", getEyeColour().getRed());
+            returnjson.put("g", getEyeColour().getGreen());
+            returnjson.put("b", getEyeColour().getBlue());
+
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error getting eye colour to json " + e);
+        }
+        return returnjson;
     }
 
 	private String playerDataJson;
