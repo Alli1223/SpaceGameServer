@@ -46,7 +46,7 @@ public class World
         return returnString;
     }
 
-	//TODO: return mapdata but as a JSON Object, not as string.
+
     public  synchronized JSONArray getMapDataToJsonArray()
     {
         JSONArray cellDataArray = new JSONArray();
@@ -58,6 +58,7 @@ public class World
                 try {
                     JSONObject celLData = new JSONObject(value.getCellContent());
 
+                    celLData.put("PlantStage", value.getPlantGrowthStage());
                     cellDataArray.put(celLData);
                 }
                 catch (Exception e)
@@ -67,6 +68,16 @@ public class World
             }
         }
         return cellDataArray;
+    }
+    public void updateWorldCells()
+    {
+        for (Cell value : map.values())
+        {
+            if(value.getPlantGrowthStage() < 4)
+                value.setPlantGrowthStage(value.getPlantGrowthStage() + 1);
+            else
+                value.setPlantGrowthStage(4);
+        }
     }
 
 	public  synchronized void setCell(Pair point, String content)

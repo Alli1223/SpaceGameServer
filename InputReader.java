@@ -38,10 +38,16 @@ public class InputReader
         JSONObject obj = new JSONObject(inString);
         int x = obj.getInt("X");
         int y = obj.getInt("Y");
-        boolean fence = obj.getBoolean("Fence");
-        boolean dirt = obj.getBoolean("Dirt");
+        int plantStage = obj.getInt("PlantStage");
+
+        //boolean fence = obj.getBoolean("Fence");
+        //boolean dirt = obj.getBoolean("Dirt");
+        //boolean wheat = obj.getBoolean("Wheat");
+        //int plantStage = obj.getInt("PlantStage");
+
         System.out.println("Cell at X:" + x + ", Y:" + y + " changed.");
         Pair cellLocation = new Pair(x, y);
+        world.getMap().get(cellLocation).setPlantGrowthStage(plantStage);
         world.setCell(cellLocation,obj.toString());
     }
 

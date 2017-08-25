@@ -91,7 +91,12 @@ public class TCPServer {
 
             //Update the network managers list of players
             // Sort player list at a regular interval
-
+            timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                   World.getInstance().updateWorldCells();
+                }
+            }, 0, 50000);
 
 
         }
@@ -194,17 +199,6 @@ class clientThread extends Thread {
                 }
 
                 outStream.flush();
-
-
-                /* OLD CODE
-                for (int i = 0; i < maxClientsCount; i++) {
-                    if (threads[i] != null && threads[i].clientName != null)
-                    {
-                        //outStream.println("{<" + threads[i].clientName + "> X:" + threads[i].character.getX() + ". Y:" + threads[i].character.getY() + ".}\n");
-                        //outStream.println(TCPServer.getInstance().globalNetworkData.toString());
-                    }
-                }
-                */
 
                 // Disconnect the client if they send the quit message
                 if (line.equals("QUIT"))
