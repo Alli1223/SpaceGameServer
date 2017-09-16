@@ -26,7 +26,7 @@ public class World
 
 	// Constructor creates the start area for the map to save processing later in the game
 	private World() {
-        int startAreaSize = 100;
+        int startAreaSize = 500;
 		map = new ConcurrentHashMap<Pair, Cell>();
 		for(int x = -startAreaSize; x < startAreaSize; x++) {
             for (int y = -startAreaSize; y < startAreaSize; y++) {
@@ -36,7 +36,7 @@ public class World
 
                 map.put(newPair, newCell);
             }
-            //System.out.println("Creating start area " + x + " of " + startAreaSize);
+            System.out.println("Creating start area " + x + " of " + startAreaSize);
         }
 	}
 	public synchronized String getCellDataToSring(int x, int y)

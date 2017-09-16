@@ -90,7 +90,7 @@ public class TCPServer {
             }
 
             //Update the network managers list of players
-            // Sort player list at a regular interval
+            // Update all the cells in the world at a regular interval(for farming)
             timer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
@@ -206,6 +206,9 @@ class clientThread extends Thread {
                     //TODO: Handle quit properly and destroy player
                     System.out.println("Player " + name + " Leaving");
 
+
+
+                    NetworkManager.getInstance().allPlayers.remove(name);
                     synchronized (this)
                     {
                         for (int i = 0; i < maxClientsCount; i++) {
