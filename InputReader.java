@@ -10,6 +10,7 @@ public class InputReader
     // Add the characters position to the network send pool
     try
     {
+        //Data
         localPlayerData.put("name",character.getName());
         localPlayerData.put("rotation", character.getRotation());
         localPlayerData.put("X", character.getX());
@@ -19,6 +20,9 @@ public class InputReader
         localPlayerData.put("bodyWear", character.getBodyWear());
         localPlayerData.put("legWear", character.getLegWear());
 
+        //Colours
+        localPlayerData.put("bodyColour", character.getBodyColourJson());
+        localPlayerData.put("legColour", character.getLegColourJson());
         localPlayerData.put("hairColour", character.getHairColourJson());
         localPlayerData.put("eyeColour", character.getEyeColourJson());
 
@@ -56,8 +60,10 @@ public class InputReader
     {
         inString = inString.substring(14); //Remove [PlayerUpdate]
 
-        JSONObject obj = new JSONObject(inString);
+        JSONObject playerData = new JSONObject(inString);
 
+
+        JSONObject obj = playerData.getJSONObject("PlayerData");
         int x = obj.getInt("X");
         int y = obj.getInt("Y");
         int rotation = obj.getInt("rotation");
@@ -69,22 +75,36 @@ public class InputReader
 
         // Eye and hair colour
         JSONObject eyecolour = obj.getJSONObject("eyeColour");
-
         int eR = eyecolour.getInt("r");
         int eG = eyecolour.getInt("g");
         int eB = eyecolour.getInt("b");
         Color eyeColour = new Color(eR,eG,eB);
+
         JSONObject haircolour = obj.getJSONObject("hairColour");
         int hR = haircolour.getInt("r");
         int hG = haircolour.getInt("g");
         int hB = haircolour.getInt("b");
         Color hairColour = new Color(hR,hG,hB);
 
+        // Body and leg colour
+        JSONObject bodycolour = obj.getJSONObject("bodyColour");
+        int bR = bodycolour.getInt("r");
+        int bG = bodycolour.getInt("g");
+        int bB = bodycolour.getInt("b");
+        Color bodyColour = new Color(bR,bG,bB);
+
+        JSONObject legcolour = obj.getJSONObject("legColour");
+        int lR = legcolour.getInt("r");
+        int lG = legcolour.getInt("g");
+        int lB = legcolour.getInt("b");
+        Color legColour = new Color(lR,lG,lB);
 
         //set character deets
         character.isMoving = isMoving;
         character.setEyeColour(eyeColour);
         character.setHairColour(hairColour);
+        character.setBodyColour(bodyColour);
+        character.setLegColour(legColour);
         character.setPlayerClothes(headWear, bodyWear, legWear);
         character.setPosition(x,y);
         character.setRotation(rotation);

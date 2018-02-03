@@ -26,6 +26,8 @@ public class Character {
 	private int headWear = 0;
 	private Color hairColour = new Color(0,0,0);
     private Color eyeColour = new Color(0,0,0);
+	private Color bodyColour = new Color(0,0,0);
+	private Color legColour = new Color(0,0,0);
     private int bodyWear = 0;
     private int legWear = 0;
 
@@ -34,8 +36,13 @@ public class Character {
     public int getLegWear() { return legWear; }
     public Color getHairColour() { return hairColour; }
     public Color getEyeColour() { return eyeColour; }
+	public Color getBodyColour() { return bodyColour;}
+	public Color getLegColour() { return legColour;}
     public Color setHairColour(Color newHairColor) { return  hairColour = newHairColor; }
     public Color setEyeColour(Color newEyeColor) { return eyeColour = newEyeColor; }
+    public Color setBodyColour(Color newBodyColour) { return bodyColour = newBodyColour; }
+	public Color setLegColour(Color newLegColour) { return legColour = newLegColour; }
+
 
     public void setPlayerClothes(int newHeadWear, int newBodyWear, int newLegWear)
     {
@@ -73,6 +80,36 @@ public class Character {
         }
         return returnjson;
     }
+	public JSONObject getLegColourJson()
+	{
+		JSONObject returnjson = new JSONObject();
+		try {
+			returnjson.put("r", getLegColour().getRed());
+			returnjson.put("g", getLegColour().getGreen());
+			returnjson.put("b", getLegColour().getBlue());
+
+		}
+		catch(Exception e)
+		{
+			System.out.println("Error getting eye colour to json " + e);
+		}
+		return returnjson;
+	}
+	public JSONObject getBodyColourJson()
+	{
+		JSONObject returnjson = new JSONObject();
+		try {
+			returnjson.put("r", getBodyColour().getRed());
+			returnjson.put("g", getBodyColour().getGreen());
+			returnjson.put("b", getBodyColour().getBlue());
+
+		}
+		catch(Exception e)
+		{
+			System.out.println("Error getting eye colour to json " + e);
+		}
+		return returnjson;
+	}
 
 	private String playerDataJson;
 
